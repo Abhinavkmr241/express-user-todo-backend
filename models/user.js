@@ -112,6 +112,12 @@ UserSchema.virtual("name.full").set(function (v) {
   this.name.last = v.substr(v.indexOf(" ") + 1)
 })
 
+UserSchema.virtual("_todos", {
+  ref: "Todos",
+  localField: "_id",
+  foreignField: "_user"
+});
+
 UserSchema.set("toJSON", { virtuals: true })
 UserSchema.set("toObject", { virtuals: true })
 

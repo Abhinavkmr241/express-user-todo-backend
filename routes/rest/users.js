@@ -33,7 +33,7 @@ module.exports = {
    */
   async get(req, res) {
     try {
-      const user = await User.findOne({ _id: req.user._id })
+      const user = await User.findOne({ _id: req.user._id }).populate("_todos")
         .select("-password -forgotpassword")
         .exec()
       return res.json({ error: false, user })
