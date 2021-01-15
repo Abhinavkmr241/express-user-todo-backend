@@ -2,7 +2,7 @@ const ToDo = require("../../models/todo")
 
 module.exports = {
 
-    /**
+  /**
     *
     * @api {get} /todos Todos list
     * @apiName todoList
@@ -25,17 +25,17 @@ module.exports = {
     *
     *
     */
-    async find(req, res) {
-        try {
-            const todos = await ToDo.find({ _user: req.user._id })
-                .exec()
-            return res.json({ error: false, todos })
-        } catch (err) {
-            return res.status(500).json({ error: true, reason: err.message })
-        }
-    },
+  async find(req, res) {
+    try {
+      const todos = await ToDo.find({ _user: req.user._id })
+        .exec()
+      return res.json({ error: false, todos })
+    } catch (err) {
+      return res.status(500).json({ error: true, reason: err.message })
+    }
+  },
 
-    /**
+  /**
     *
     * @api {post} /todo todo manual insert
     * @apiName todoManualInsert
@@ -67,28 +67,28 @@ module.exports = {
     *
     *
     */
-    async post(req, res) {
-        try {
-            const { message, isActive } = req.body
-            if (message === undefined) {
-                return res
-                    .status(400)
-                    .json({ error: true, reason: "Missing manadatory field `message`" })
-            }
+  async post(req, res) {
+    try {
+      const { message, isActive } = req.body
+      if (message === undefined) {
+        return res
+          .status(400)
+          .json({ error: true, reason: "Missing manadatory field `message`" })
+      }
 
-            let todo = await ToDo.create({
-                message,
-                isActive,
-                _user: req.user._id
-            })
-            todo = todo.toObject()
-            return res.json({ error: false, todo })
-        } catch (err) {
-            return res.status(500).json({ error: true, reason: err.message })
-        }
-    },
+      let todo = await ToDo.create({
+        message,
+        isActive,
+        _user: req.user._id
+      })
+      todo = todo.toObject()
+      return res.json({ error: false, todo })
+    } catch (err) {
+      return res.status(500).json({ error: true, reason: err.message })
+    }
+  },
 
-    /**
+  /**
     *
     * @api {put} /todo/:id Todo update, one or multiple fields
     * @apiName todoUpdate
@@ -119,22 +119,22 @@ module.exports = {
     *
     *
     */
-    async put(req, res) {
-        try {
-            const { message, isActive } = req.body
-            const todo = await ToDo.findOne({ _id: req.params.id }).exec()
-            if (todo === null) return res.status(400).json({ error: true, reason: "No task found!" })
-            if (message !== undefined) todo.message = message
-            if (isActive !== undefined && typeof isActive === "boolean") todo.isActive = isActive
-            let updatedTodo = await todo.save()
-            updatedTodo = updatedTodo.toObject()
-            return res.json({ error: false, ToDo: updatedTodo })
-        } catch (err) {
-            return res.status(500).json({ error: true, reason: err.message })
-        }
-    },
+  async put(req, res) {
+    try {
+      const { message, isActive } = req.body
+      const todo = await ToDo.findOne({ _id: req.params.id }).exec()
+      if (todo === null) return res.status(400).json({ error: true, reason: "No task found!" })
+      if (message !== undefined) todo.message = message
+      if (isActive !== undefined && typeof isActive === "boolean") todo.isActive = isActive
+      let updatedTodo = await todo.save()
+      updatedTodo = updatedTodo.toObject()
+      return res.json({ error: false, ToDo: updatedTodo })
+    } catch (err) {
+      return res.status(500).json({ error: true, reason: err.message })
+    }
+  },
 
-   /**
+  /**
    *
    * @api {delete} /todo/:id Todo delete
    * @apiName todoDelete
@@ -154,12 +154,12 @@ module.exports = {
    *
    *
    */
-    async delete(req, res) {
-        try {
-            await ToDo.deleteOne({ _id: req.params.id })
-            return res.json({ error: false })
-        } catch (err) {
-            return res.status(500).json({ error: true, reason: err.message })
-        }
+  async delete(req, res) {
+    try {
+      await ToDo.deleteOne({ _id: req.params.id })
+      return res.json({ error: false })
+    } catch (err) {
+      return res.status(500).json({ error: true, reason: err.message })
     }
+  }
 }

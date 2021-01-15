@@ -2,7 +2,7 @@ const User = require("../../models/user")
 const ToDo = require("../../models/todo")
 
 module.exports = {
-  
+
   /**
    *
    * @api {get} /user User Details
