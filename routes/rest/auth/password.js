@@ -1,7 +1,7 @@
 const moment = require("moment")
 const cuid = require("cuid")
 
-const mail = require("../../../lib/mail")
+const mail = require("../../../lib/mailer")
 
 const User = require("../../../models/user")
 
