@@ -1,5 +1,10 @@
 const ToDo = require("../../models/todo")
 
+const mail = require("../../lib/mail")
+
+const User = require("../../models/user")
+const user = require("../../models/user")
+
 module.exports = {
 
   /**
@@ -82,6 +87,23 @@ module.exports = {
         _user: req.user._id
       })
       todo = todo.toObject()
+      const user = await User.findOne({ _id: req.user._id }).exec()
+      try {
+        await mail("todo", {
+          to: user.email,
+          subject: "Todo added successfully",
+          locals: {
+            userName: user.name.full,
+            message: todo.message,
+            isActive: todo.isActive
+          }
+        })
+      } catch (mailErr) {
+        console.log("==> Mail sending Error: ", mailErr)
+        throw new Error(
+          "Failed to send Todo add Email! Please Retry Later."
+        )
+      }
       return res.json({ error: false, todo })
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
@@ -128,6 +150,23 @@ module.exports = {
       if (isActive !== undefined && typeof isActive === "boolean") todo.isActive = isActive
       let updatedTodo = await todo.save()
       updatedTodo = updatedTodo.toObject()
+      const user = await User.findOne({ _id: req.user._id }).exec()
+      try {
+        await mail("todo", {
+          to: user.email,
+          subject: "Todo updated successfully",
+          locals: {
+            userName: user.name.full,
+            message: updatedTodo.message,
+            isActive: updatedTodo.isActive
+          }
+        })
+      } catch (mailErr) {
+        console.log("==> Mail sending Error: ", mailErr)
+        throw new Error(
+          "Failed to send Todo update Email! Please Retry Later."
+        )
+      }
       return res.json({ error: false, ToDo: updatedTodo })
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
@@ -156,7 +195,25 @@ module.exports = {
    */
   async delete(req, res) {
     try {
+      const todo = await ToDo.findOne({ _id: req.params.id }).exec()
+      const user = await User.findOne({ _id: req.user._id }).exec()
       await ToDo.deleteOne({ _id: req.params.id })
+      try {
+        await mail("todo", {
+          to: user.email,
+          subject: "Todo deleted successfully",
+          locals: {
+            userName: user.name.full,
+            message: todo.message,
+            isActive: todo.isActive
+          }
+        })
+      } catch (mailErr) {
+        console.log("==> Mail sending Error: ", mailErr)
+        throw new Error(
+          "Failed to send Todo delete Email! Please Retry Later."
+        )
+      }
       return res.json({ error: false })
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
