@@ -65,6 +65,7 @@ module.exports = {
           return res.status(500).json({ error: true, reason: err0.message })
         }
       })
+      return res.status(200)
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
     }
@@ -97,6 +98,7 @@ module.exports = {
           return res.status(500).json({ error: true, reason: err0.message })
         }
       })
+      return res.status(200)
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
     }
