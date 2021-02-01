@@ -30,4 +30,13 @@ const ToDoSchema = mongoose.Schema({
 
 })
 
+ToDoSchema.virtual("_todoImages", {
+  ref: "TodoImages",
+  localField: "_id",
+  foreignField: "_todo"
+})
+
+ToDoSchema.set("toJSON", { virtuals: true })
+ToDoSchema.set("toObject", { virtuals: true })
+
 module.exports = mongoose.model("Todos", ToDoSchema)

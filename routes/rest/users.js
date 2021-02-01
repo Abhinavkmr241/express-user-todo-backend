@@ -1,5 +1,6 @@
 const User = require("../../models/user")
 const ToDo = require("../../models/todo")
+const UserImage = require("../../models/userImage")
 
 module.exports = {
 
@@ -33,7 +34,7 @@ module.exports = {
    */
   async get(req, res) {
     try {
-      const user = await User.findOne({ _id: req.user._id }).populate("_todos")
+      const user = await User.findOne({ _id: req.user._id }).populate("_userImage _todos")
         .select("-password -forgotpassword")
         .exec()
       return res.json({ error: false, user })
@@ -130,6 +131,7 @@ module.exports = {
   async delete(req, res) {
     try {
       await User.deleteOne({ _id: req.user._id })
+      await UserImage.deleteOne({ _user: req.user._id })
       await ToDo.deleteMany({ _user: req.user._id })
       return res.json({ error: false })
     } catch (err) {

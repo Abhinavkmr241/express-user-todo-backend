@@ -10,6 +10,8 @@ const signup = require("./auth/signup")
 const forgotpassword = require("./auth/password")
 const users = require("./users")
 const todos = require("./todos")
+const userImages = require("./userImages")
+const todoImages = require("./todoImages")
 
 router.post("/login", login.post) // UNAUTHENTICATED
 router.post("/signup", signup.post) // UNAUTHENTICATED
@@ -22,9 +24,15 @@ router.get("/user", users.get)
 router.put("/user/:id", users.put)
 router.delete("/user", users.delete)
 
+router.post("/userImage", userImages.post)
+router.put("/userImage/:id", userImages.put)
+
 router.get("/todos", todos.find)
 router.post("/todo", todos.post)
 router.put("/todo/:id", todos.put)
 router.delete("/todo/:id", todos.delete)
+
+router.post("/todoImages/:id", todoImages.post)
+router.put("/todoImages/:id", todoImages.put)
 
 module.exports = router

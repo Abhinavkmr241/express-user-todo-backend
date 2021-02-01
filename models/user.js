@@ -118,6 +118,12 @@ UserSchema.virtual("_todos", {
   foreignField: "_user"
 });
 
+UserSchema.virtual("_userImage", {
+  ref: "UserImage",
+  localField: "_id",
+  foreignField: "_user"
+});
+
 UserSchema.set("toJSON", { virtuals: true })
 UserSchema.set("toObject", { virtuals: true })
 
