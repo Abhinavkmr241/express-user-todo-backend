@@ -26,13 +26,16 @@ router.delete("/user", users.delete)
 
 router.post("/userImage", userImages.post)
 router.put("/userImage/:id", userImages.put)
+router.delete("/userImage/:id", userImages.delete)
 
 router.get("/todos", todos.find)
 router.post("/todo", todos.post)
 router.put("/todo/:id", todos.put)
 router.delete("/todo/:id", todos.delete)
 
+router.get("/todoImages/:id", todoImages.get)
 router.post("/todoImages/:id", todoImages.post)
 router.put("/todoImages/:id", todoImages.put)
+router.delete("/todoImages/:id", todoImages.delete)
 
 module.exports = router

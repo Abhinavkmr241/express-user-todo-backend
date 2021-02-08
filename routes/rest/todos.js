@@ -157,8 +157,8 @@ module.exports = {
    */
   async delete(req, res) {
     try {
-      await ToDo.deleteOne({ _id: req.params.id })
       await ToDoImages.deleteMany({ _todo: req.params.id })
+      await ToDo.deleteOne({ _id: req.params.id })
       return res.json({ error: false })
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })

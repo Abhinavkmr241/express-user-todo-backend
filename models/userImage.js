@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
+const fs = require("fs")
 
-const UserImageSchema = mongoose.Schema({
+const UserImageSchema = new mongoose.Schema({
 
   imageUser: {
     path: String,
@@ -24,5 +25,13 @@ const UserImageSchema = mongoose.Schema({
     default: Date.now
   },
 })
+
+UserImageSchema.virtual("base64").get(() => {
+  const b64 = Buffer.from(fs.readFileSync(this.imageUser.path)).toString("base64")
+  return `${b64}`
+})
+
+UserImageSchema.set("toJSON", { virtuals: true })
+UserImageSchema.set("toObject", { virtuals: true })
 
 module.exports = mongoose.model("UserImage", UserImageSchema)

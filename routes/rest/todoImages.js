@@ -39,6 +39,15 @@ const upload = multer({
 
 module.exports = {
 
+  async get(req, res) {
+    try {
+      const todoImages = await TodoImages.find({ _todo: req.params.id }).exec()
+      return res.json({ error: false, todoImages })
+    } catch (err) {
+      return res.status(500).json({ error: true, reason: err.message })
+    }
+  },
+
   async post(req, res) {
     try {
       await upload(req, res, async (err) => {
@@ -54,12 +63,17 @@ module.exports = {
         }
         try {
           const todo = await Todo.findOne({ _id: req.params.id }).exec()
-          let todoImages = await TodoImages.create({
-            images: req.files,
-            _todo: todo._id
-          })
-          todoImages = todoImages.toObject()
-          return res.json({ error: false, todoImages })
+          req.files.forEach(async (file) => {
+            await TodoImages.create({
+              imageTodo: {
+                path: file.path,
+                filename: file.filename,
+                contentType: file.mimetype
+              },
+              _todo: todo._id
+            })
+          });
+          return res.json({ error: false })
         } catch (err0) {
           return res.status(500).json({ error: true, reason: err0.message })
         }
@@ -85,11 +99,14 @@ module.exports = {
         }
         try {
           const todoImages = await TodoImages.findOne({ _id: req.params.id }).exec()
-          todoImages.images = req.files;
-          let updatedTodoImages = await todoImages.save()
-          updatedTodoImages = updatedTodoImages.toObject()
+          todoImages.imageTodo = {
+            path: req.files[0].path,
+            filename: req.files[0].filename,
+            contentType: req.files[0].contentType
+          }
+          await todoImages.save()
           return res
-            .json({ error: false, todoImages: updatedTodoImages })
+            .json({ error: false })
         } catch (err0) {
           return res.status(500).json({ error: true, reason: err0.message })
         }
@@ -98,5 +115,14 @@ module.exports = {
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
     }
-  }
+  },
+
+  async delete(req, res) {
+    try {
+      await TodoImages.deleteOne({ _id: req.params.id })
+      return res.json({ error: false })
+    } catch (err) {
+      return res.status(500).json({ error: true, reason: err.message })
+    }
+  },
 }

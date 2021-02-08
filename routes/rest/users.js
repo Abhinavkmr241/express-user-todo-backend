@@ -1,6 +1,7 @@
 const User = require("../../models/user")
 const ToDo = require("../../models/todo")
 const UserImage = require("../../models/userImage")
+const TodoImages = require("../../models/todoImages")
 
 module.exports = {
 
@@ -130,9 +131,16 @@ module.exports = {
    */
   async delete(req, res) {
     try {
-      await User.deleteOne({ _id: req.user._id })
       await UserImage.deleteOne({ _user: req.user._id })
+      let todos = await ToDo.find({ _user: req.user._id })
+      todos.forEach(async (todo) => {
+        await TodoImages.deleteMany({ _todo: todo._id })
+      })
+      // for (var i = 0; i < todos.length; i++) {
+      //   await TodoImages.deleteMany({ _todo: todos[i]._id })
+      // }
       await ToDo.deleteMany({ _user: req.user._id })
+      await User.deleteOne({ _id: req.user._id })
       return res.json({ error: false })
     } catch (err) {
       return res.status(500).json({ error: true, reason: err.message })
