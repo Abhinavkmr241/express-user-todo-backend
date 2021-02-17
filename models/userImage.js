@@ -26,7 +26,7 @@ const UserImageSchema = new mongoose.Schema({
   },
 })
 
-UserImageSchema.virtual("base64").get(() => {
+UserImageSchema.virtual("base64").get(function () {
   const b64 = Buffer.from(fs.readFileSync(this.imageUser.path)).toString("base64")
   return `${b64}`
 })

@@ -1,30 +1,30 @@
-const multer = require('multer');
-const path = require('path');
+const multer = require('multer')
+const path = require('path')
 
-const TodoImages = require('../../models/todoImages');
-const Todo = require('../../models/todo');
+const TodoImages = require('../../models/todoImages')
+const Todo = require('../../models/todo')
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
-  destination: '/home/abhinav/Desktop/Express/express-user-todo/public/uploads',
+  destination: '/home/abhinav/Desktop/LS/express-user-todo-backend/public/uploads',
   filename(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
   }
-});
+})
 
 // Check File Type
 function checkFileType(file, cb) {
   // Allowed ext
-  const filetypes = /jpeg|jpg|png|gif/;
+  const filetypes = /jpeg|jpg|png|gif/
   // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
   // Check mime
-  const mimetype = filetypes.test(file.mimetype);
+  const mimetype = filetypes.test(file.mimetype)
 
   if (mimetype && extname) {
-    return cb(null, true);
+    return cb(null, true)
   }
-  return cb('Error: Images Only!');
+  return cb('Error: Images Only!')
 }
 
 // Init Upload
@@ -32,7 +32,7 @@ const upload = multer({
   storage,
   limits: { fileSize: 1000000 },
   fileFilter(req, file, cb) {
-    checkFileType(file, cb);
+    checkFileType(file, cb)
   }
 }).array('images', 10)
 
@@ -72,7 +72,7 @@ module.exports = {
               },
               _todo: todo._id
             })
-          });
+          })
           return res.json({ error: false })
         } catch (err0) {
           return res.status(500).json({ error: true, reason: err0.message })

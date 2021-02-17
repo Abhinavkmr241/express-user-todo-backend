@@ -32,7 +32,7 @@ const TodoImagesSchema = mongoose.Schema({
 //   return next()
 // })
 
-TodoImagesSchema.virtual("base64").get(() => {
+TodoImagesSchema.virtual("base64").get(function () {
   const b64 = Buffer.from(fs.readFileSync(this.imageTodo.path)).toString("base64")
   return `${b64}`
 })
